@@ -3,35 +3,53 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Undermap</title>
+  <title>Undermap — Choose Your City</title>
   <style>
     body {
       background: #14181d;
       color: #d8e2ec;
       font-family: Georgia, serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       margin: 0;
+      padding: 40px 20px;
       text-align: center;
-      padding: 20px;
     }
-    h1 {
-      font-size: 2.4em;
-      letter-spacing: 4px;
-      margin-bottom: 8px;
+    h1 { font-size: 2.4em; letter-spacing: 4px; margin-bottom: 4px; }
+    .tagline { color: #7d8fa3; font-style: italic; margin-bottom: 40px; }
+    .city-list { max-width: 400px; margin: 0 auto; }
+    .city {
+      display: block;
+      background: #1e242c;
+      border: 1px solid #2e3742;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 16px;
+      color: #d8e2ec;
+      text-decoration: none;
+      font-size: 1.3em;
+      letter-spacing: 1px;
     }
-    .tagline {
+    .city:active { background: #2a323d; }
+    .coming-soon {
+      opacity: 0.35;
+      pointer-events: none;
+    }
+    .coming-soon span {
+      display: block;
+      font-size: 0.6em;
       color: #7d8fa3;
-      font-style: italic;
-      font-size: 1.1em;
+      margin-top: 4px;
+      letter-spacing: 2px;
     }
   </style>
 </head>
 <body>
   <h1>UNDERMAP</h1>
-  <p class="tagline">Every city has one.</p>
+  <p class="tagline">Every city has one. Choose yours.</p>
+
+  <div class="city-list">
+    <a class="city" href="boston/">BOSTON</a>
+    <a class="city coming-soon" href="#">NEW YORK <span>COMING SOON</span></a>
+    <a class="city coming-soon" href="#">CHICAGO <span>COMING SOON</span></a>
+  </div>
 </body>
 </html>
