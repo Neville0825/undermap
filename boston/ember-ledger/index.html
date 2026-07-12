@@ -680,7 +680,13 @@
 
     function openMap() {
       var g = BEATS[current].gps;
-      window.open('https://maps.google.com/?q=' + g.lat + ',' + g.lon, '_blank');
+      var a = document.createElement('a');
+      a.href = 'https://maps.google.com/?q=' + g.lat + ',' + g.lon;
+      a.target = '_blank';
+      a.rel = 'noopener';  // detach the new tab — prevents iOS Chrome blanking
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
     }
 
     // On page load: if a save exists, offer resume and demote BEGIN.
