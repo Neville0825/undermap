@@ -102,12 +102,12 @@
       currently ends. Well walked, Keeper.</p>
   </div>
 
-  <div class="screen hidden" id="chapterEnd">
-    <h2>CHAPTER ONE COMPLETE</h2>
+<div class="screen hidden" id="chapterEnd">
+    <h2 id="chapterEndHeading">CHAPTER COMPLETE</h2>
     <p class="story" id="chapterEndText"></p>
-    <button onclick="continueChapter()">CONTINUE THE TRAIL</button>
+    <button id="chapterContinueBtn" onclick="continueChapter()">CONTINUE THE TRAIL</button>
     <br>
-    <button class="hintbtn" onclick="stopForToday()">RETURN ANOTHER DAY</button>
+    <button class="hintbtn" id="chapterStopBtn" onclick="stopForToday()">RETURN ANOTHER DAY</button>
     <p class="meta hidden" id="farewellText"></p>
   </div>
   <script>
@@ -243,6 +243,7 @@
         },
         card: "",
         chapterEnd: {
+          heading: "CHAPTER ONE COMPLETE",
           text: "You have it. You actually have it. Fragment one of the Ember Ledger — and the name history erased. The college records list her only as 'a servant of the library.' The Keepers knew her name: Constance Reed. The note in the margin says the second fragment went to the garden of the dead, where the Navigator rests. I know where that is. The question is whether you have another journey in you today. It's a short bus or rideshare hop west — or rest, and the trail will keep. Constance waited fifty years. There's no shame in resting. Only in forgetting.",
         }
       },
@@ -332,8 +333,118 @@
         puzzle: null,
         card: "",
         chapterEnd: {
+          heading: "CHAPTER TWO COMPLETE",
           text: "Two fragments of the Ember Ledger ride in your pocket — more than anyone has held since Longfellow himself. The Keepers had a phrase for travelers like you: worthy of the road. The final page lies with the makers of new things — a bus or rideshare back to Harvard Square, then the Red Line east. Continue... or return another day? The ledger has waited 250 years. It can wait for you.",
           farewell: "Chapter Two complete. Two fragments recovered. The ledger remembers. When you return, the way runs east, by rail. Until then — the dead will keep your secret. They are very, very good at that."
+        }
+      },
+      {
+        title: "THE RIDE EAST",
+        directions: "Return to Harvard Square by bus 71 or 73, or by rideshare. Enter the T station and check in on the inbound Red Line platform — the story rides with you.",
+        gps: { lat: 42.3734, lon: -71.1189, radius: 70 },
+        voiceTitle: "THE WHOLE STORY — LISTEN AS YOU RIDE",
+        voice: "Board the inbound train toward Kendall. Two stops. And while the tunnel swallows you, let me finally tell it start to finish. January, 1764. Constance Reed, twenty-three years old, a servant of the library nobody looked at twice. When the fire took the stacks she went in, not out, and came through the smoke with the one book that mattered wrapped in her cloak. The blacksmith hid it. The sexton swore the first oath. For fifty years she moved the fragments, one step ahead of the families whose forged debts filled its pages. She died free, and unknown, and the trail slept until a poet found a note in a margin. Longfellow scattered the fragments anew. And when the world turned modern, the last Keeper was not a poet. He was an engineer. Professor Elias Marsh. Brilliant. Paranoid. Dying in 1962 with no successor, he spent his final years hiding the last page inside a puzzle only strangers could solve. Because strangers, he said, were the only people he could trust. Get off at Kendall. You're going to meet him.",
+        puzzle: null,
+        card: "Ride the Red Line inbound two stops to Kendall MIT. When you surface, stay near the station plaza — the trail resumes the moment you arrive."
+      },
+      {
+        title: "KENDALL STATION",
+        directions: "Exit at Kendall/MIT station and stand in the plaza by the station entrance on Main Street.",
+        gps: { lat: 42.3625, lon: -71.0862, radius: 60 },
+        voiceTitle: "INCOMING CALL — PROFESSOR QUILL",
+        voice: "You're in Marsh's world now. Did you notice, down between the tracks? Bells. A ring. A sheet of steel. A sculptor hung them there in 1987, played by levers on the platform. The instruments are named for Pythagoras, Kepler, and Galileo. And here's a Keeper's joke for you: Marsh's cipher key is not among them. He chose someone far closer to home. You'll see. Now come — Marsh's trail starts at the strangest building in Cambridge.",
+        puzzle: null,
+        card: "From the station plaza, walk west along Main Street. Within a few minutes the buildings stop behaving: walls lean, towers crumple, windows tilt like the whole block is mid-thought. That is the Stata Center. Marsh would have hated it. That's exactly why the trail goes through it."
+      },
+      {
+        title: "THE BUILDING THAT LIES",
+        directions: "Walk west on Main Street until you reach the leaning, crumpled towers of the Stata Center on Vassar Street.",
+        gps: { lat: 42.3616, lon: -71.0906, radius: 60 },
+        voiceTitle: "MARSH'S LESSON",
+        voice: "Frank Gehry designed this in 2004. A building that looks like it's collapsing and never does. Remember the statue in Harvard Yard? Three lies in bronze. The Keepers' first lesson: the record lies. Marsh's version of the lesson stands in front of you. Things that look wrong can be perfectly sound. And things that look sound can be perfectly wrong. Find the building's true name — it wears it plainly, even while everything else about it refuses to be plain.",
+        puzzle: {
+          prompt: "The crooked building tells one straight fact: the family name of the couple it honors. Find the sign and enter that name.",
+          answers: ["STATA", "THE STATA CENTER", "STATA CENTER"],
+          hints: [
+            "Look for the official building sign near the main entrance.",
+            "Two first names, one shared surname.",
+            "STATA. The one honest thing about it."
+          ]
+        },
+        card: "Now cross the campus the way Marsh did every day for thirty years — south, toward the river. Follow the outdoor paths until the buildings open onto a great lawn facing the water, crowned by a dome bigger than the Capitol's. Walk to the center of the lawn, turn your back to the river, and look up."
+      },
+      {
+        title: "KILLIAN COURT",
+        directions: "Make your way south through campus to the great lawn facing the river — Killian Court, beneath the Great Dome. Stand at its center and face the dome.",
+        gps: { lat: 42.3591, lon: -71.0917, radius: 70 },
+        voiceTitle: "THE MISSING IMMORTAL",
+        voice: "Carved into the marble around this court are the names of the giants. The thinkers MIT declared immortal in 1916. Marsh lectured beneath them for decades, and his note to the Keepers begins here. Among the immortals stands one born a few miles from this court. A boy who ran barefoot through colonial Boston and, if the Keepers' oldest records are true, once held a page of the ledger in his own ink-stained hands. He is the key. But first, prove you can read the founders' stone. The great dome bears a year, written the old way. Look up beneath the dome.",
+        puzzle: {
+          prompt: "Decode the year carved the old way beneath the dome — M is 1000, D is 500, C is 100, L is 50, X is 10, I is 1. Enter it as a modern number.",
+          answers: ["1861"],
+          hints: [
+            "The numerals run beneath the institute's name — and notice the carvers used V where you'd expect U. That's classical Latin lettering.",
+            "M plus D plus C plus C plus C is 1800. Keep adding.",
+            "1861 — the year the Institute was founded."
+          ]
+        },
+        card: "Now, Marsh's American. Scan the names around the court all you like — you won't find him watching the lawn. He watches the avenue. Leave the court heading west to the grand columned entrance at 77 Massachusetts Avenue, step back on the sidewalk, and read the names carved high on that face."
+      },
+      {
+        title: "THE RUNAWAY APPRENTICE",
+        directions: "Walk west from the court to 77 Massachusetts Avenue — the grand columned front door of MIT. Step back on the sidewalk and look up at the carved names.",
+        gps: { lat: 42.3592, lon: -71.0932, radius: 50 },
+        voiceTitle: "BUILDING SEVEN",
+        voice: "Seventy-seven Massachusetts Avenue. The front door of the Institute. Ten columns and a limestone face that has watched a century of geniuses hurry past. High on this building, the carvers set more immortal names. Marsh's American is among them. Born on Milk Street in Boston in 1706. A runaway printer's apprentice who became the most famous man in the world. And who, the Keepers' oldest records claim, once held a page of the ledger in his own ink-stained hands. Find his name and speak it.",
+        puzzle: {
+          prompt: "Search the names carved high on this building for the one figure born in colonial Boston. Enter his name.",
+          answers: ["FRANKLIN", "BEN FRANKLIN", "BENJAMIN FRANKLIN"],
+          hints: [
+            "The rest are Europeans and ancients — you want the American.",
+            "He's on your hundred-dollar bills.",
+            "FRANKLIN — Boston's runaway apprentice, watching over the avenue."
+          ]
+        },
+        card: "Now turn around. Directly across the avenue sits Marsh's riddle in plain view of ten thousand passing cars: a human figure, cross-legged, made entirely of numbers. Cross carefully at the light and meet the Alchemist."
+      },
+      {
+        title: "THE ALCHEMIST",
+        directions: "Cross Massachusetts Avenue at the crosswalk to the seated human figure sculpture outside the student center.",
+        gps: { lat: 42.3591, lon: -71.0940, radius: 45 },
+        voiceTitle: "THE MAN MADE OF NUMBERS",
+        voice: "There he sits. A thinker built from digits and symbols, hollow and glowing, holding his own head together with mathematics. The sculptor made him in 2011. But the Keepers say Marsh dreamed him fifty years early. This is Marsh's self-portrait, arriving two generations late. A man who became his numbers. Look through him — because the answer to the Keepers' question is the sculpture itself.",
+        puzzle: {
+          prompt: "The Keepers ask: look closely — what is the Alchemist made of?",
+          answers: ["NUMBERS", "DIGITS", "NUMERALS", "MATH", "NUMBERS AND SYMBOLS"],
+          hints: [
+            "Walk around him — look at what forms his skin.",
+            "Count with them. Calculate with them.",
+            "Numbers. Marsh's only language — and his last disguise."
+          ]
+        },
+        card: "One measurement remains — the strangest unit of length in America. Walk south on Massachusetts Avenue onto the great bridge over the Charles. In 1958, an MIT student named Oliver Smoot was laid down, head to heel, over and over, to measure this bridge with his own body. The marks are painted beneath your feet to this day. Stay on the sidewalk the entire way, and walk the smoots to the middle of the crossing."
+      },
+      {
+        title: "THE LAST MEASURE",
+        directions: "Walk south onto the Harvard Bridge sidewalk and continue to the halfway point over the river. Stay on the sidewalk the entire crossing.",
+        gps: { lat: 42.3547, lon: -71.0910, radius: 60 },
+        voiceTitle: "HALFWAY TO EVERYTHING",
+        voice: "Stand at the halfway mark. Boston in front of you. Cambridge at your back. The river running to the sea beneath your feet. Constance Reed crossed this river in a rowboat with a burned book under her cloak. Two hundred and sixty years later, you stand above it holding everything she saved. Marsh adored this bridge. A man who became a unit of measure. He wrote that it was the most honest monument in Boston. The bridge's full length is painted at its end — a number of smoots, plus one small extra measure.",
+        puzzle: {
+          prompt: "How many smoots long is the bridge? Enter the number (the ear is a bonus).",
+          answers: ["364.4", "364", "364.4 SMOOTS", "364 SMOOTS"],
+          hints: [
+            "The painted total is at the bridge's end — but the halfway mark may jog your memory too.",
+            "Three hundred sixty-four, and a little more.",
+            "364.4 smoots — plus one ear."
+          ]
+        },
+        card: "",
+        chapterEnd: {
+          heading: "THE EMBER LEDGER — COMPLETE",
+          finale: true,
+          text: "It's names. Pages and pages of names — every family the Tories ruined with forged debts and stolen surveys. Every farm taken with false paper. Constance couldn't fight them. So she did the one thing power can't survive: she kept the receipts. That's the treasure. Not gold. The record, kept true. The Keepers' oath was three words: measure it honestly. As of today, that's your oath too. Congratulations, Keeper. Oh — one more thing. The surveyor's mark. You saw its shadow on this trail. It doesn't only appear in Cambridge. If you ever find yourself in Back Bay, or the North End, or Downtown... keep your eyes open. Constance's ledger had four volumes.",
+          farewell: "The Ember Ledger is complete. Three fragments. One name restored. Measure it honestly, Keeper — and watch for the mark."
         }
       }
     ];
@@ -492,8 +603,19 @@
     function showCard() {
       var b = BEATS[current];
       if (b.chapterEnd) {
+        document.getElementById('chapterEndHeading').textContent =
+          b.chapterEnd.heading || 'CHAPTER COMPLETE';
         document.getElementById('chapterEndText').textContent = b.chapterEnd.text;
         document.getElementById('farewellText').classList.add('hidden');
+        var cb = document.getElementById('chapterContinueBtn');
+        var sb = document.getElementById('chapterStopBtn');
+        if (b.chapterEnd.finale) {
+          cb.classList.add('hidden');
+          sb.textContent = 'CLOSE THE LEDGER';
+        } else {
+          cb.classList.remove('hidden');
+          sb.textContent = 'RETURN ANOTHER DAY';
+        }
         showScreen('chapterEnd');
         return;
       }
