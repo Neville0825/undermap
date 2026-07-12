@@ -401,10 +401,26 @@
     }
 
     function showCard() {
-      document.getElementById('cardText').textContent = BEATS[current].card;
+      var b = BEATS[current];
+      if (b.chapterEnd) {
+        document.getElementById('chapterEndText').textContent = b.chapterEnd.text;
+        document.getElementById('farewellText').classList.add('hidden');
+        showScreen('chapterEnd');
+        return;
+      }
+      document.getElementById('cardText').textContent = b.card;
       showScreen('cardScreen');
     }
 
+    function continueChapter() { loadBeat(current + 1); }
+
+    function stopForToday() {
+      var b = BEATS[current];
+      localStorage.setItem(SAVE_KEY, String(current + 1));
+      var f = document.getElementById('farewellText');
+      f.textContent = b.chapterEnd.farewell;
+      f.classList.remove('hidden');
+    }
     function nextBeat() { loadBeat(current + 1); }
 
     function openMap() {
