@@ -148,7 +148,7 @@
 
   <!-- WARD REVEAL -->
   <div class="screen hidden" id="wardScreen">
-<div class="ward" id="wardCard">
+    <div class="ward" id="wardCard">
       <div class="ward-symbol" id="wardSymbol"></div>
       <div class="ward-state-label" id="wardStateLabel"></div>
       <div id="wardText"></div>
@@ -486,25 +486,33 @@
       showScreen('storyScreen');
     }
 
+    // Shared speech helper. Speaks text; calls onDone when finished (or immediately if no TTS).
+    function speak(text, onDone) {
+      if ('speechSynthesis' in window) {
+        try { speechSynthesis.cancel(); } catch (e) {}
+        var msg = new SpeechSynthesisUtterance(text);
+        msg.rate = 0.95;
+        msg.onend = function () { if (onDone) onDone(); };
+        msg.onerror = function () { if (onDone) onDone(); };
+        speechSynthesis.speak(msg);
+      } else {
+        if (onDone) onDone();
+      }
+    }
+
     function playVoice() {
       var b = BEATS[current];
       var t = document.getElementById('transcript');
       t.textContent = '"' + b.voice + '"';
       t.classList.remove('hidden');
       document.getElementById('playBtn').classList.add('hidden');
-      if ('speechSynthesis' in window) {
-        var msg = new SpeechSynthesisUtterance(b.voice);
-        msg.rate = 0.95;
-        msg.onend = function () {
-          document.getElementById('afterVoiceBtn').classList.remove('hidden');
-        };
-        speechSynthesis.speak(msg);
-      } else {
+      speak(b.voice, function () {
         document.getElementById('afterVoiceBtn').classList.remove('hidden');
-      }
+      });
     }
 
     function afterVoice() {
+      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
       var b = BEATS[current];
       if (b.puzzle) { showPuzzle(); } else { afterPuzzleFlow(); }
     }
@@ -516,7 +524,7 @@
       else { afterWard(); }
     }
 
-function markSVG(color, broken) {
+    function markSVG(color, broken) {
       var ring = broken
         ? '<circle cx="40" cy="40" r="34" fill="none" stroke="' + color + '" stroke-width="4" stroke-dasharray="10 7"/>'
         : '<circle cx="40" cy="40" r="34" fill="none" stroke="' + color + '" stroke-width="4"/>';
@@ -545,9 +553,13 @@ function markSVG(color, broken) {
       if (lbl) { lbl.textContent = label; }
       document.getElementById('wardText').textContent = b.ward.text;
       showScreen('wardScreen');
+      // Sal is still on the line from the call moments ago — his reaction just continues.
+      // No incoming-call framing; the voice auto-plays and the transcript stays on screen.
+      speak(b.ward.text);
     }
 
     function afterWard() {
+      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
       var b = BEATS[current];
       if (b.reveal) {
         document.getElementById('revealTitle').textContent = b.reveal.title;
@@ -673,3 +685,4 @@ function markSVG(color, broken) {
   </script>
 </body>
 </html>
+
