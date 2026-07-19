@@ -386,6 +386,13 @@
 
     // Where the Sal-message screen should go when CONTINUE is tapped.
     var salNext = null;
+    // Filename of the MP3 to play on the Sal-message screen (null = robot voice).
+    var salAudioFile = null;
+
+    // ---- Recorded-voice playback (MP3 with robot-voice fallback) ----
+    var AUDIO_DIR = 'audio/';   // MP3 folder, sits beside this index.html
+    var currentAudio = null;    // the <audio> currently playing, so we can stop it
+    var audioWatchdog = null;   // safety timer so the flow never gets stuck
 
     var WELCOME_BACK = "I'm proud of you. Coming back here takes guts \u2014 and you've got them. Let's finish what we started.";
 
@@ -396,8 +403,9 @@
     }
 
     // Reusable Sal-message screen. text = what he says; nextFn = called on CONTINUE.
-    function showSalMessage(text, nextFn) {
+    function showSalMessage(text, nextFn, audioFile) {
       salNext = nextFn;
+      salAudioFile = audioFile || null;
       document.getElementById('salText').textContent = '"' + text + '"';
       document.getElementById('salText').setAttribute('data-voice', text);
       document.getElementById('salPlayBtn').classList.remove('hidden');
@@ -407,11 +415,11 @@
     function playSalVoice() {
       var text = document.getElementById('salText').getAttribute('data-voice') || '';
       document.getElementById('salPlayBtn').classList.add('hidden');
-      speak(text);
+      playAudio(salAudioFile, text);
     }
 
     function salContinue() {
-      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+      stopAudio();
       var fn = salNext; salNext = null;
       if (fn) fn();
     }
@@ -433,7 +441,7 @@
       // greet them warmly first, then drop into the next beat.
       if (localStorage.getItem(RETURN_KEY) === '1') {
         localStorage.removeItem(RETURN_KEY);
-        showSalMessage(WELCOME_BACK, function () { loadBeat(target); });
+        showSalMessage(WELCOME_BACK, function () { loadBeat(target); }, 'sal-ch1-end-welcome.mp3');
       } else {
         loadBeat(target);
       }
@@ -441,6 +449,7 @@
 
     function loadBeat(i) {
       if (i >= BEATS.length) { showScreen('endScreen'); return; }
+      stopAudio();
       current = i;
       hintIndex = 0;
       localStorage.setItem(SAVE_KEY, String(i));
@@ -525,6 +534,44 @@
       showScreen('storyScreen');
     }
 
+    // Stop whatever voice is playing — recorded MP3 and/or the robot fallback.
+    function stopAudio() {
+      if (currentAudio) {
+        try { currentAudio.pause(); } catch (e) {}
+        currentAudio.onended = null;
+        currentAudio.onerror = null;
+        currentAudio = null;
+      }
+      if (audioWatchdog) { clearTimeout(audioWatchdog); audioWatchdog = null; }
+      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+    }
+
+    // Play a recorded MP3 if the file exists; otherwise fall back to the robot
+    // voice. file = filename inside AUDIO_DIR (or null to force the robot voice);
+    // text = transcript for the fallback; onDone = optional callback when done.
+    function playAudio(file, text, onDone) {
+      stopAudio();
+      var doneCalled = false;
+      function done() { if (doneCalled) return; doneCalled = true; if (onDone) onDone(); }
+      if (!file) { speak(text, done); return; }
+      var audio = new Audio(AUDIO_DIR + file);
+      var fellBack = false;
+      function fallback() {
+        if (fellBack) return;
+        fellBack = true;
+        currentAudio = null;
+        speak(text, done);
+        // If the MP3 is missing and the robot voice is blocked (can happen on
+        // iOS), this timer makes sure the player can still move on.
+        audioWatchdog = setTimeout(done, 4000);
+      }
+      audio.onended = function () { currentAudio = null; done(); };
+      audio.onerror = fallback;
+      currentAudio = audio;
+      var p = audio.play();
+      if (p && typeof p.catch === 'function') { p.catch(fallback); }
+    }
+
     // Shared speech helper. Speaks text; calls onDone when finished (or immediately if no TTS).
     function speak(text, onDone) {
       if ('speechSynthesis' in window) {
@@ -545,13 +592,13 @@
       t.textContent = '"' + b.voice + '"';
       t.classList.remove('hidden');
       document.getElementById('playBtn').classList.add('hidden');
-      speak(b.voice, function () {
+      playAudio('sal-ch1-b' + (current + 1) + '-call.mp3', b.voice, function () {
         document.getElementById('afterVoiceBtn').classList.remove('hidden');
       });
     }
 
     function afterVoice() {
-      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+      stopAudio();
       var b = BEATS[current];
       if (b.puzzle) { showPuzzle(); } else { afterPuzzleFlow(); }
     }
@@ -600,11 +647,11 @@
     function playWardVoice() {
       var b = BEATS[current];
       document.getElementById('wardPlayBtn').classList.add('hidden');
-      speak(b.ward.text);
+      playAudio('sal-ch1-b' + (current + 1) + '-ward.mp3', b.ward.text);
     }
 
     function afterWard() {
-      try { if ('speechSynthesis' in window) speechSynthesis.cancel(); } catch (e) {}
+      stopAudio();
       var b = BEATS[current];
       if (b.reveal) {
         document.getElementById('revealTitle').textContent = b.reveal.title;
@@ -620,7 +667,7 @@
       var b = BEATS[current];
       // Beat 7: induction speech (voiced Sal screen) before the chapter-end doors.
       if (b.induction) {
-        showSalMessage(b.induction, showCard);
+        showSalMessage(b.induction, showCard, 'sal-ch1-b' + (current + 1) + '-induction.mp3');
         return;
       }
       showCard();
@@ -689,7 +736,7 @@
         document.getElementById('salContinueBtn').textContent = 'CONTINUE';
         localStorage.removeItem(RETURN_KEY); // same-session return: skip the welcome-back
         loadBeat(next);
-      });
+      }, 'sal-ch1-end-pause.mp3');
     }
 
     // DOOR C: pass the torch — save progress, set the return flag, show the voiced ending farewell.
@@ -706,7 +753,7 @@
         document.getElementById('salContinueBtn').textContent = 'CONTINUE'; // reset for other uses
         localStorage.removeItem(RETURN_KEY); // same-session return: skip the welcome-back
         loadBeat(next);
-      });
+      }, 'sal-ch1-end-torch.mp3');
     }
 
     function nextBeat() { loadBeat(current + 1); }
@@ -734,3 +781,4 @@
   </script>
 </body>
 </html>
+
